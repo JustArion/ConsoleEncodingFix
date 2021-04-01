@@ -12,7 +12,7 @@ namespace Dawn.EncodingFix
         public override void VRChat_OnUiManagerInit()
         {
             MelonPreferences.CreateCategory("EncodingFix", "Encoding Fix");
-            MelonPreferences.CreateEntry("EncodingFix", "Enabled", true);
+            MelonPreferences.CreateEntry("EncodingFix", "Enabled", true, "Enabled (Requires Restart"); // Don't wanna cache it yet.
             MelonPreferences.CreateEntry("EncodingFix", "PageID", 0, "Advanced: SetPageID (int) Default = 0");
             
             LocalPrefsSaved(); // Don't wanna call OnPrefs for eveyone lol.
@@ -24,8 +24,9 @@ namespace Dawn.EncodingFix
         private static void LocalPrefsSaved()
         {
             m_Enabled = MelonPreferences.GetEntryValue<bool>("EncodingFix", "Enabled");
-            m_PageID = MelonPreferences.GetEntryValue<int>("EncodingFix", "PageID");
             if (!m_Enabled) return;
+            m_PageID = MelonPreferences.GetEntryValue<int>("EncodingFix", "PageID");
+           
             SetCodingPage((uint) m_PageID);
         }
         private static bool m_Enabled;
