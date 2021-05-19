@@ -5,18 +5,19 @@ using System.Threading.Tasks;
 using MelonLoader;
 using static MelonLoader.MelonLogger;
 
-namespace Dawn.EncodingFix
+namespace Dawn.Encoding
 {
-    internal sealed class Start : MelonMod
+    internal class Start : MelonMod
     {
-        public override void VRChat_OnUiManagerInit()
+        public override void OnApplicationLateStart()
         {
             MelonPreferences.CreateCategory("EncodingFix", "Encoding Fix");
             MelonPreferences.CreateEntry("EncodingFix", "Enabled", true, "Enabled (Requires Restart"); // Don't wanna cache it yet.
-            MelonPreferences.CreateEntry("EncodingFix", "PageID", 0, "Advanced: SetPageID (int) Default = 0");
+            MelonPreferences.CreateEntry("EncodingFix", "PageID", 65001, "Advanced: SetPageID (int) Default = 0");
             
             LocalPrefsSaved(); // Don't wanna call OnPrefs for eveyone lol.
         }
+
         public override void OnPreferencesSaved()
         {
             LocalPrefsSaved();
@@ -36,14 +37,17 @@ namespace Dawn.EncodingFix
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCP(uint wCodePageID);
 
+        //UTF-8 = 65001
+        //UTF-16 = 1200 / 1201
+        //UTF-32 = 12000 / 12001
         static void SetCodingPage(uint i = 65001) // https://stackoverflow.com/questions/38533903/set-c-sharp-console-application-to-unicode-output/59307528#59307528
         {
             //Credits to Cillié Malan
             SetConsoleOutputCP(i);
             SetConsoleCP(i);
-            Console.OutputEncoding = Encoding.GetEncoding((int) i);
-            Console.InputEncoding = Encoding.GetEncoding((int) i);
-
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.InputEncoding = System.Text.Encoding.UTF8;
+            Msg($"EncodingPage Set to {i} : {Console.OutputEncoding}");
         }
     }
 }
