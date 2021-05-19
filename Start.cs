@@ -47,7 +47,11 @@ namespace Dawn.Encoding
             SetConsoleCP(i);
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.InputEncoding = System.Text.Encoding.UTF8;
+            if (!First) return;
             Msg($"EncodingPage Set to {i} : {Console.OutputEncoding}");
+            First = false;
         }
+
+        private static bool First = true;
     }
 }
